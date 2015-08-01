@@ -57,6 +57,18 @@ If you'd like to change the defaults, edit the `resetConfig()` function.
 
 # Details/design notes:
 
+## SOFTWARE
+
+This software uses the VS1053 libraries and RGBLCDSHield libraries from Adafruit. It's also quite large. You will absolutely need a ATMEGA32 to run the software.
+
+At last compile we were very close to the edge of what the board could do, at 81% memory usage. Don't panic about the Low memory messages out of the compiler. We never use more than a hundred bytes or so for local variables and are careful to not allocate memory we don't have. 
+
+```
+Sketch uses 25,042 bytes (81%) of program storage space. Maximum is 30,720 bytes.
+Global variables use 1,654 bytes (80%) of dynamic memory, leaving 394 bytes for local variables. Maximum is 2,048 bytes.
+Low memory available, stability problems may occur.
+```
+
 ## HARDWARE
 
 1. Adafruit Music Maker card (Uses digital pins 11,12,13)
