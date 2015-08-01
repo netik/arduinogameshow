@@ -61,12 +61,25 @@ If you'd like to change the defaults, edit the `resetConfig()` function.
 
 1. Adafruit Music Maker card (Uses digital pins 11,12,13)
 - https://learn.adafruit.com/adafruit-music-maker-shield-vs1053-mp3-wav-wave-ogg-vorbis-player/overview
-- connect GPIO 4-7 to LEDs in the player buzzers with an 8-wire patch
 1. Adafruit Display/button board (2 wire, i2c)
 https://www.adafruit.com/products/772
 1. CAT 5 Patch Shield https://www.adafruit.com/product/256
 1. Arduino Uno or Dumiellanova (32k AVR required!) https://www.adafruit.com/products/50
 1. Cat 5 connectors and crimpers
+1. Use Stacking headers on all Arduino shields! You'll need an extra set to lift the display board up from the patch panel. https://www.adafruit.com/products/85
+
+You'll need to solder and build all of these boards (except the Arduino.) 
+
+There is also some interconnect work to be done. The Music Maker's GPIO pins 4 though 7 get connected to the patch shield so that the LEDs will work. On the patch shield, you have to wire the appropriate Arduino digital pins to the player buzzer switches. See the pinout list below. 
+
+The optimal Arduino stack is:
+```
+Display Backpack (top)
+Set of extra stacking headers into patch shield
+Patch Shield
+VS1053 Shield
+Arduino (bottom)
+```
 
 ## Audio connections
 
