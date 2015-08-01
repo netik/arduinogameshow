@@ -1,7 +1,47 @@
-Details/design notes:
+This is software and hardware notes to build a small arduino based 
+game show that allows for up to four players. Players can "buzz in" 
+to answer trivia questions or otherwise and there are a number of 
+features that allow you to customize the game build into the software.
 
-HARDWARE
------------------------------------------------------------------------------
+It will automatically determine the first person to buzz in, play sound
+effects and time the game for you. 
+
+# Controls
+
+## General Use
+
+- Use Arrow-Right to enter setup at initial screen, when time is up, or game paused.
+- Use Arrow-Left to exit setup or the current menu option.
+- Use Arrow-Down to start a game.
+- Use Select to pause a running game. Hit Select again to continue.
+
+## Setup Options
+
+Once you've entered setup you get a number of options. 
+- Move through the options with UP or DOWN.
+- Use Select to start editing
+- Use Up or Down when editing to change values.
+- Use Left to exit 
+- Exit setup completely to save your changes. Changes do not save until you have fully exited setup.
+- Setup will timeout after ten seconds if you do nothing.
+- 
+### Options
+- **Max Time** (Default 5 minutes): In increments of 30 seconds, change the length of the round. Set this to 00:00:00 to disable the timer entirely. 
+- **Autonext** (Default Off): When someonme buzzes in the game does not continue until the game master pushes the SELECT button. If Autonext is on the game will automatically continue after the specified time. Time is in seconds. 
+- **Soundset** (Default 1): Chooses the currently active soundset
+- **Unique Sounds** (Default Off): Play a unique per-player sound for their buzzer
+- **MultiBuzz** (Default Off): Instead of allowing only one person to buzz in at a time, display the first person to buzz in and also display subsequent player-numbers that buzz in. I find this to be confusing, but there it is. 
+- **Buzz in pause** (Default Off): If on, allows players to buzz in when the game is paused. Otherwise, the system will play the "invalid" sound. 
+- **Buzzer lockout** (Default Off): I should have really named this "Buzz in once per round", but there's only 14 characters to work with on the display. If this is turned on, a player may only buzz in once per round. Once they buzz in, they're locked out until the clock is restarted. 
+- **Beep Lastten** (Default Off): If turned on, we'll play a beep and flash the LEDs on the buzzers during the last ten seconds of the game. TODO: allow people to use a custom MP3 here instead of the 1khz test-tone. 
+- **Factory Reset** Resets the system to all default values. It will blink once when you hit select, that resets the game. 
+
+If you'd like to change the defaults, edit the `resetConfig()` function.
+
+# Details/design notes:
+
+## HARDWARE
+
 1. Adafruit Music Maker card (Uses digital pins 11,12,13)
 - https://learn.adafruit.com/adafruit-music-maker-shield-vs1053-mp3-wav-wave-ogg-vorbis-player/overview
 - connect GPIO 4-7 to LEDs in the player buzzers with an 8-wire patch
@@ -11,9 +51,9 @@ https://www.adafruit.com/products/772
 1. Arduino Uno or Dumiellanova (32k AVR required!)
 1. Cat 5 connectors and crimpers
 
-Audio connections
---------------------
-The VS1053 is hard wired, so you don't get to choose these pins. 
+## Audio connections
+
+The VS1053 is hard wired, so you don't get to choose what Arduino pins are used.
 
 MCS,DCS,CSC,DREQ (3,4,6,7)
   -- there are 7 GPIO pins on board that are extra. woooo
@@ -26,23 +66,26 @@ MCS,DCS,CSC,DREQ (3,4,6,7)
   3-7 used for music maker
   11-13 used for music maker
 
-Player Buzzers and LEDs
-----------------------------
+## Player Buzzers and LEDs
+
 LEDs for PLAYERS 1-4 Connected to GPIO 4-7 on music maker card
 Player switches connect to digital pins as shown in list below 
 
-Display / Control
-------------------
+## Display / Control
 
 Analog4 and Analog5 go to the display. 
 0 through 5 are arduino analog wires.
 
-RJ 45 connections
-------------------
-Tied to Blue/Blue White lines
-On Patch Panel, pins labelled 4 and 8 connect at button push.
-Use internal pullup resistors on arduino instead of soldering resistors.
-Patch panel pins 1+2 go to LEDS in the buzzers
+## RJ 45 connections
+
+We're using a patch shield here. you'll have to solder wires between
+the Arduino pins and the patch panel pins. See the list below. Each
+Switch gets a ground and a Arduino PIN. We're using the internal
+100k Pull up resistors on the Arduino so you don't have to solder
+in resistors. Less work. 
+
+Per jack,  Cat 5 Jack pins 1+2 go to LEDS in the buzzers. 
+Cat 5 Jack pins 4+5 go to the Switch.
 
 Final Arduino Pinout
 ---------------------
@@ -110,7 +153,7 @@ For example:
 1-tu.mp3      Time's up sound played when clock runs out
 ```
 
-You can have up to 256 soundsets, just update the #define for MAX_SOUNDSETS. 
+You can have up to 256 soundsets, just update the `#define` for `MAX_SOUNDSETS` 
 
 Please check and double check your soundset files. The current configuration is to stop 
 the game cold and enter a tight loop if a file cannot be located. 
