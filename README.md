@@ -1,5 +1,5 @@
 
-This a software and hardware project to build a small arduino based 
+This a software and hardware project to build a small Arduino based 
 game show that allows for up to four players. Players can "buzz in" 
 to answer trivia questions or otherwise and there are a number of 
 features that allow you to customize the game build into the software.
@@ -64,8 +64,8 @@ If you'd like to change the defaults, edit the `resetConfig()` function.
 - connect GPIO 4-7 to LEDs in the player buzzers with an 8-wire patch
 1. Adafruit Display/button board (2 wire, i2c)
 https://www.adafruit.com/products/772
-1. CAT 5 Patch Shield
-1. Arduino Uno or Dumiellanova (32k AVR required!)
+1. CAT 5 Patch Shield https://www.adafruit.com/product/256
+1. Arduino Uno or Dumiellanova (32k AVR required!) https://www.adafruit.com/products/50
 1. Cat 5 connectors and crimpers
 
 ## Audio connections
@@ -77,7 +77,7 @@ MCS,DCS,CSC,DREQ (3,4,6,7)
   -- they have onboard 100K Resistors
   -- don't use GPIO 1 - it will boot into midi mode if tied high
 
-  There are 14 pins on the arduino UNO, but we're using most of them.
+  There are 14 pins on the Arduino UNO, but we're using most of them.
 
   0,1 TX RX
   3-7 used for music maker
@@ -91,7 +91,6 @@ Player switches connect to digital pins as shown in list below
 ## Display / Control
 
 Analog4 and Analog5 go to the display. 
-0 through 5 are arduino analog wires.
 
 ## RJ 45 connections
 
