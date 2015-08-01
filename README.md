@@ -209,6 +209,4 @@ to alter this behavior to just not play a sound. Up to you, it's open source!
 
 Have fun, and happy gaming. 
 
-John Adams
-July + August, 2015.
-
+-- jna (August, 2015)
