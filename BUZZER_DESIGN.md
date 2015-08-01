@@ -41,3 +41,7 @@ button. That way the light is visible to the audience.
 
 Repeat this four times.
 
+Future Improvements
+-------------------
+- If I was building the game as a single board, I might move to three-pin XLR. XLR is much more robust than CAT5 and readily available at most venues. It would take some work to make this function on two pins, but it's still possible. CAT5 connectors break off too easily. 
+- Go wireless. Some sort of hackery with the Keyfob receiver module (https://www.adafruit.com/products/1095) and a 315Mhz receiver would allow wireless buzzing in, but it seems untrustworthy to depend on RF and 
