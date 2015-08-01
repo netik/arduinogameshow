@@ -1,10 +1,13 @@
-This is software and hardware notes to build a small arduino based 
+
+This a software and hardware project to build a small arduino based 
 game show that allows for up to four players. Players can "buzz in" 
 to answer trivia questions or otherwise and there are a number of 
 features that allow you to customize the game build into the software.
 
 It will automatically determine the first person to buzz in, play sound
 effects and time the game for you. 
+
+-- jna July, 2015. 
 
 # Controls
 
