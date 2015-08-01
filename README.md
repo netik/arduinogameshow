@@ -7,8 +7,6 @@ features that allow you to customize the game build into the software.
 It will automatically determine the first person to buzz in, play sound
 effects and time the game for you. 
 
--- jna July, 2015. 
-
 # Controls
 
 ## General Use
