@@ -27,7 +27,7 @@ Once you've entered setup you get a number of options.
 - Use Left to exit 
 - Exit setup completely to save your changes. Changes do not save until you have fully exited setup.
 - Setup will timeout after ten seconds if you do nothing.
-- 
+
 ### Options
 - **Max Time** (Default 5 minutes): In increments of 30 seconds, change the length of the round. Set this to 00:00:00 to disable the timer entirely. 
 - **Autonext** (Default Off): When someonme buzzes in the game does not continue until the game master pushes the SELECT button. If Autonext is on the game will automatically continue after the specified time. Time is in seconds. 
