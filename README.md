@@ -39,7 +39,7 @@ written to the Arduino's EEPROM.
 - **Buzz in pause** (Default Off): If on, allows players to buzz in when the game is paused. Otherwise, the system will play the "invalid" sound. 
 - **Buzzer lockout** (Default Off): I should have really named this "Buzz in once per round", but there's only 14 characters to work with on the display. If this is turned on, a player may only buzz in once per round. Once they buzz in, they're locked out until the clock is restarted. 
 - **Beep Lastten** (Default Off): If turned on, we'll play a beep and flash the LEDs on the buzzers during the last ten seconds of the game. TODO: allow people to use a custom MP3 here instead of the 1khz test-tone. 
-- **Factory Reset** Resets the system to all default values. It will blink once when you hit select, that resets the game. 
+- **Factory Reset** Resets the system to all default values. Hit SELECT to execute. It will blink once when you press select. This indicates the reset has completed. 
 
 ### Setup Internals
 
