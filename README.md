@@ -111,3 +111,9 @@ For example:
 ```
 
 You can have up to 256 soundsets, just update the #define for MAX_SOUNDSETS. 
+
+Please check and double check your soundset files. The current configuration is to stop 
+the game cold and enter a tight loop if a file cannot be located. 
+
+This was a design decision I made to force myself to make proper sound sets. You might want 
+to alter this behavior to just not play a sound. Up to you, it's open source!
