@@ -20,7 +20,9 @@ effects and time the game for you.
 
 ## Setup Options
 
-Once you've entered setup you get a number of options. 
+Once you've entered setup you get a number of options. These changes are
+written to the Arduino's EEPROM. 
+
 - Move through the options with UP or DOWN.
 - Use Select to start editing
 - Use Up or Down when editing to change values.
@@ -38,6 +40,17 @@ Once you've entered setup you get a number of options.
 - **Buzzer lockout** (Default Off): I should have really named this "Buzz in once per round", but there's only 14 characters to work with on the display. If this is turned on, a player may only buzz in once per round. Once they buzz in, they're locked out until the clock is restarted. 
 - **Beep Lastten** (Default Off): If turned on, we'll play a beep and flash the LEDs on the buzzers during the last ten seconds of the game. TODO: allow people to use a custom MP3 here instead of the 1khz test-tone. 
 - **Factory Reset** Resets the system to all default values. It will blink once when you hit select, that resets the game. 
+
+### Setup Internals
+
+If you change the code, pay close attention to the `CONFIG_VERSION` and `CONFIG_START` `#define`s. 
+
+We try to read a few bytes from the EEPROM. If they match the `CONFIG_VERSION`
+string we assume that a valid configuration struct exists at that location 
+of the EEPROM. 
+
+If that location contains a differently sized struct or garbage, we'll use that as the config, so 
+it's vital that you change the config version string if any changes happen to the configuration struct. 
 
 If you'd like to change the defaults, edit the `resetConfig()` function.
 
