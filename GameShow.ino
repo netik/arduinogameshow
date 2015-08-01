@@ -57,6 +57,7 @@
 #define WHITE 0x7
 
 // sounds
+#define MAX_SOUNDSETS 2
 #define SND_BUZZ    0
 #define SND_INVALID 1
 #define SND_TIMEUP  2
@@ -75,7 +76,6 @@ byte lastplayer = -1;
 #define CONFIG_VERSION "gs5"
 // Tell it where to store your config data in EEPROM
 #define CONFIG_START 32
-
 
 // config struct
 typedef struct {
@@ -296,7 +296,14 @@ void playsound(byte type,byte player) {
  
   switch (type) {
     case SND_BUZZ:
-      strcat(filename, "buzz.mp3");
+      if (gconfig.unique_sounds) { 
+        filename[2] = 'p';
+        filename[3] = (char) player + 49;
+        filename[4] = '\0';
+        strcat(filename, ".mp3");       
+      } else {
+        strcat(filename, "buzz.mp3");
+      }
       break;
     case SND_INVALID:
       strcat(filename, "inv.mp3");
@@ -393,8 +400,10 @@ void handle_gm_buttons() {
   /* handle DOWN button - start of game */
   uint8_t buttons = lcd.readButtons();
 
-  if (buttons & BUTTON_DOWN &&
-      (current_state == STATE_NEWGAME || current_state == STATE_OUTOFTIME)) {
+  if ( ((buttons & BUTTON_DOWN) &&
+        (current_state == STATE_NEWGAME || current_state == STATE_OUTOFTIME)) ||
+       ((buttons & BUTTON_UP) &&
+        (current_state == STATE_PAUSED)) ) {
     // We are starting a game.
     current_state = STATE_RUNNING;
     timeleft = gconfig.maxtime;
@@ -410,6 +419,7 @@ void handle_gm_buttons() {
     nexttick = millis() + 1000;
   }
 
+  
   /* handle RIGHT button */
   if ((buttons & BUTTON_RIGHT) && (current_state == STATE_PAUSED || current_state == STATE_NEWGAME || current_state == STATE_OUTOFTIME)) {
     current_state = STATE_SETUP;
@@ -622,7 +632,7 @@ void handleSetup() {
             break;
 
           case 2:  // Soundset
-            inputInt(menuItems[2], &gconfig.soundset, 1, 3, 1, 0);
+            inputInt(menuItems[2], &gconfig.soundset, 1, MAX_SOUNDSETS, 1, 0);
             redraw = MOVELIST;  // redraw entire menu
             buttons = false; // prevent exit.
             break;
@@ -632,7 +642,6 @@ void handleSetup() {
             redraw = MOVELIST;  // redraw entire menu
             buttons = false; // prevent exit.
             break;
-
 
           case 4:  // Multibuzz
             inputBool(menuItems[4], &gconfig.multibuzz);
@@ -652,7 +661,7 @@ void handleSetup() {
             buttons = false; // prevent exit.
             break;
 
-          case 7:  // Lockout
+          case 7:  // Beep during last ten
             inputBool(menuItems[7], &gconfig.lastten);
             redraw = MOVELIST;  // redraw entire menu
             buttons = false; // prevent exit.
