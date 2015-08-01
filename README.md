@@ -13,11 +13,11 @@ effects and time the game for you.
 
 ## General Use
 
-- Use Arrow-Right to enter setup at initial screen, when time is up, or game paused.
-- Use Arrow-Left to exit setup or the current menu option.
-- Use Arrow-Down to start a game.
-- Use Select to pause a running game. Hit Select again to continue.
-- To abort the currently running game, Pause the game, Hit Arrow Right, then Arrow Left (yeah, this sucks, I'll fix it later.)
+- Use RIGHT to enter setup at initial screen, when time is up, or game paused.
+- Use LEFT to exit setup or the current menu option.
+- Use DOWN to start a game.
+- Use SELECT to pause a running game. Hit SELECT again to continue.
+- To abort the currently running game, Pause the game, and hit UP
 
 ## Setup Options
 
@@ -25,9 +25,9 @@ Once you've entered setup you get a number of options. These changes are
 written to the Arduino's EEPROM. 
 
 - Move through the options with UP or DOWN.
-- Use Select to start editing
-- Use Up or Down when editing to change values.
-- Use Left to exit 
+- Use SELECT to start editing
+- Use UP or DOWN when editing to change values.
+- Use LEFT to exit 
 - Exit setup completely to save your changes. Changes do not save until you have fully exited setup.
 - Setup will timeout after ten seconds if you do nothing.
 
@@ -44,7 +44,7 @@ written to the Arduino's EEPROM.
 
 ### Setup Internals
 
-If you change the code, pay close attention to the `CONFIG_VERSION` and `CONFIG_START` `#define`s. 
+If you change the code, pay close attention to the `CONFIG_VERSION` and `CONFIG_START` #defines.
 
 We try to read a few bytes from the EEPROM. If they match the `CONFIG_VERSION`
 string we assume that a valid configuration struct exists at that location 
