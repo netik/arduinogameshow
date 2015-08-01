@@ -18,9 +18,10 @@ TIA568B
 8 Brown
 ```
 
-At the other end of the cable, Use an 8" long piece of 1/2" tubing as
+At the other end of the cable, use an 8" long piece of 1/2" tubing as
 a handle and protective cover. This works best if you use round
-momentary switches that can sit inside of the tubing snugly.
+momentary switches that can sit inside of the tubing snugly. Some electrical
+tape around the switch (or epoxy) ensures a solid fit.
 
 Blue(4) and Blue/White(5) are solderd to the momentary switch. 
 Orange(2) and Orange/White(1) are soldered to a high-brightness Blue LED.
@@ -44,4 +45,7 @@ Repeat this four times.
 Future Improvements
 -------------------
 - If I was building the game as a single board, I might move to three-pin XLR. XLR is much more robust than CAT5 and readily available at most venues. It would take some work to make this function on two pins, but it's still possible. CAT5 connectors break off too easily. 
-- Go wireless. Some sort of hackery with the Keyfob receiver module (https://www.adafruit.com/products/1095) and a 315Mhz receiver would allow wireless buzzing in, but it seems untrustworthy to depend on RF and 
+- Go wireless. Some sort of hackery with the Keyfob receiver module (https://www.adafruit.com/products/1095) and a 315Mhz receiver would allow wireless buzzing in, but it seems untrustworthy to depend on RF for a game show. A signal failure might make people angry. 
+
+
+
