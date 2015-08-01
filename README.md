@@ -86,6 +86,8 @@ You'll need to solder and build all of these boards (except the Arduino.)
 
 There is also some interconnect work to be done. The Music Maker's GPIO pins 4 though 7 get connected to the patch shield so that the LEDs will work. On the patch shield, you have to wire the appropriate Arduino digital pins to the player buzzer switches. See the pinout list below. 
 
+*Side note:* If I was buidling this a second time, I would not have interconnected the GPIO pins to the LEDs. Reading back over these docs I realize I could have connected analog 0-3 to the player buttons, and moved the player LEDs to some PWM pins. Then I would have been able to do fun lighting effects with PWM. Oh well! 
+
 The optimal Arduino stack is:
 
 ```
