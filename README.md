@@ -3,10 +3,13 @@ Details/design notes:
 HARDWARE
 -----------------------------------------------------------------------------
 1. Adafruit Music Maker card (Uses digital pins 11,12,13)
-https://learn.adafruit.com/adafruit-music-maker-shield-vs1053-mp3-wav-wave-ogg-vorbis-player/overview
-  * connect GPIO 4-7 to LEDs in the player buzzers with an 8-wire patch
+
+- https://learn.adafruit.com/adafruit-music-maker-shield-vs1053-mp3-wav-wave-ogg-vorbis-player/overview
+- connect GPIO 4-7 to LEDs in the player buzzers with an 8-wire patch
 
 2. Adafruit Display/button board (2 wire, i2c)
+https://www.adafruit.com/products/772
+
 
 3. CAT 5 Patch Shield
 
@@ -56,7 +59,8 @@ Use internal pullup resistors on arduino instead of soldering resistors.
 Patch panel pins 1+2 go to LEDS in the buzzers
 
 Final Arduino Pinout
---------------------------
+---------------------
+```
 DIGITAL
 
 0 RX        no connect
@@ -91,3 +95,4 @@ GPIO
 5 
 6
 7
+```
