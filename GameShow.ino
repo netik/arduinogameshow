@@ -741,7 +741,7 @@ void update_clock()
 
     /* TODO: Handle millis() rollover, or, maybe we don't care because its 50 days in new arduinos */
     nexttick += 1000;  // do it again 1 second later
-    if ((timeleft <= 10) && (gconfig.lastten == 1) && (timeleft != 0)) { 
+    if ((timeleft <= 10) && (gconfig.lastten == 1) && (timeleft != 0) && (current_state == STATE_RUNNING)) { 
       set_player_leds(LOW);
       musicPlayer.sineTest(0x44, 250);
       set_player_leds(HIGH);
@@ -845,6 +845,11 @@ void loop() {
 
   /* take care of the players */
   switch (current_state) {
+    case STATE_NEWGAME:
+      // das blinkenlights if we are inbetween rounds!
+      solo_player_led((millis()/100) % 4);
+      delay(150);
+      break; 
     case STATE_SETUP:
     case STATE_INSETUP:
       handleSetup();
