@@ -30,7 +30,7 @@ Once you've entered setup you get a number of options.
 
 ### Options
 - **Max Time** (Default 5 minutes): In increments of 30 seconds, change the length of the round. Set this to 00:00:00 to disable the timer entirely. 
-- **Autonext** (Default Off): When someonme buzzes in the game does not continue until the game master pushes the SELECT button. If Autonext is on the game will automatically continue after the specified time. Time is in seconds. 
+- **Autonext** (Default Off): When someone buzzes in the game does not continue until the game master pushes the SELECT button. If Autonext is on the game will automatically continue after the specified time. Time is in seconds. 
 - **Soundset** (Default 1): Chooses the currently active soundset
 - **Unique Sounds** (Default Off): Play a unique per-player sound for their buzzer
 - **MultiBuzz** (Default Off): Instead of allowing only one person to buzz in at a time, display the first person to buzz in and also display subsequent player-numbers that buzz in. I find this to be confusing, but there it is. 
