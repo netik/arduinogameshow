@@ -96,6 +96,11 @@ The system supports multiple "soundsets" which allow you to change the game's so
 The sound files should be named:
 
 ```
+<soundsetnumber>-<soundname>.mp3
+```
+
+For example: 
+```
 1-buzz.mp3    Default buzzer sound, set 1
 1-inv.mp3     Invalid buzzer sound (if someone buzzes in during pause), set 1     
 1-p1.mp3      Player 1 through 4 unique buzzer sounds (if unique is turned on), set 1
@@ -103,13 +108,6 @@ The sound files should be named:
 1-p3.mp3
 1-p4.mp3
 1-tu.mp3      Time's up sound played when clock runs out
-2-buzz.mp3    
-2-inv.mp3
-2-p1.mp3
-2-p2.mp3
-2-p3.mp3
-2-p4.mp3
-2-tu.mp3
 ```
 
 You can have up to 256 soundsets, just update the #define for MAX_SOUNDSETS. 
