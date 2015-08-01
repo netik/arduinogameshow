@@ -32,6 +32,7 @@ written to the Arduino's EEPROM.
 - Setup will timeout after ten seconds if you do nothing.
 
 ### Options
+
 - **Max Time** (Default 5 minutes): In increments of 30 seconds, change the length of the round. Set this to 00:00:00 to disable the timer entirely. 
 - **Autonext** (Default Off): When someone buzzes in the game does not continue until the game master pushes the SELECT button. If Autonext is on the game will automatically continue after the specified time. Time is in seconds. 
 - **Soundset** (Default 1): Chooses the currently active soundset
@@ -55,21 +56,24 @@ it's vital that you change the config version string if any changes happen to th
 
 If you'd like to change the defaults, edit the `resetConfig()` function.
 
-# Details/design notes:
+# Design Notes
 
-## SOFTWARE
+## Sofware
 
-This software uses the VS1053 libraries and RGBLCDSHield libraries from Adafruit. It's also quite large. You will absolutely need a ATMEGA32 to run the software.
+This software uses the VS1053 libraries and RGBLCDSHield libraries from Adafruit. It's also quite large. You will absolutely need a ATMEGA32 to run it.
 
-At last compile we were very close to the edge of what the board could do, at 81% memory usage. Don't panic about the Low memory messages out of the compiler. We never use more than a hundred bytes or so for local variables and are careful to not allocate memory we don't have. 
+At last compile we were very close to the edge of what the board could do, at around 80% usage. Don't panic about the "low memory messages" out of the compiler. We never use more than a hundred bytes or so for local variables and are careful to not allocate memory we don't have. No crashes yet!
 
+This is what a normal compile looks like:
 ```
 Sketch uses 25,042 bytes (81%) of program storage space. Maximum is 30,720 bytes.
 Global variables use 1,654 bytes (80%) of dynamic memory, leaving 394 bytes for local variables. Maximum is 2,048 bytes.
 Low memory available, stability problems may occur.
 ```
 
-## HARDWARE
+## Hardware
+
+We love Adafruit. Buy some stuff. 
 
 1. Adafruit Music Maker card (Uses digital pins 11,12,13)
 - https://learn.adafruit.com/adafruit-music-maker-shield-vs1053-mp3-wav-wave-ogg-vorbis-player/overview
@@ -85,6 +89,7 @@ You'll need to solder and build all of these boards (except the Arduino.)
 There is also some interconnect work to be done. The Music Maker's GPIO pins 4 though 7 get connected to the patch shield so that the LEDs will work. On the patch shield, you have to wire the appropriate Arduino digital pins to the player buzzer switches. See the pinout list below. 
 
 The optimal Arduino stack is:
+
 ```
 Display Backpack (top)
 Set of extra stacking headers into patch shield
