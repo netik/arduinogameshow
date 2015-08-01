@@ -3,29 +3,24 @@ Details/design notes:
 HARDWARE
 -----------------------------------------------------------------------------
 1. Adafruit Music Maker card (Uses digital pins 11,12,13)
-
 - https://learn.adafruit.com/adafruit-music-maker-shield-vs1053-mp3-wav-wave-ogg-vorbis-player/overview
 - connect GPIO 4-7 to LEDs in the player buzzers with an 8-wire patch
-
-2. Adafruit Display/button board (2 wire, i2c)
+1. Adafruit Display/button board (2 wire, i2c)
 https://www.adafruit.com/products/772
-
-
-3. CAT 5 Patch Shield
-
-4. Arduino Uno or Dumiellanova (32k AVR required!)
-
-5. Cat 5 connectors and crimpers
+1. CAT 5 Patch Shield
+1. Arduino Uno or Dumiellanova (32k AVR required!)
+1. Cat 5 connectors and crimpers
 
 Audio connections
 --------------------
+The VS1053 is hard wired, so you don't get to choose these pins. 
 
 MCS,DCS,CSC,DREQ (3,4,6,7)
   -- there are 7 GPIO pins on board that are extra. woooo
   -- they have onboard 100K Resistors
   -- don't use GPIO 1 - it will boot into midi mode if tied high
 
-  There are 14 pins on the arduino UNO
+  There are 14 pins on the arduino UNO, but we're using most of them.
 
   0,1 TX RX
   3-7 used for music maker
@@ -41,15 +36,6 @@ Display / Control
 
 Analog4 and Analog5 go to the display. 
 0 through 5 are arduino analog wires.
-
-Could maybe move analog4/5 ?
-  No, 4 and 5 are only pins with i2C on Decimelia
-
-Does the music maker board use i2c? NO.
-  Wooot, it uses the digital 4 pins
-
-Digital is 0-13
-Analog is 0-5
 
 RJ 45 connections
 ------------------
@@ -96,3 +82,34 @@ GPIO
 6
 7
 ```
+
+SD CARD
+-------
+
+The SD Card in my unit is a 4GB (over kill!!) SanDisk MicroSD card.
+I originally wanted to have a nice directory structure but the VS1053 had serious problems playing back from subdirectories, which is really stupid. Files should be MP3s. I first attempted to use WAV and AIF, which resulted in nothing but problems.
+
+Avoid WAV.  The chip seems to really like playing MP3s. 
+
+The system supports multiple "soundsets" which allow you to change the game's sounds en masse. 
+
+The sound files should be named:
+
+```
+1-buzz.mp3    Default buzzer sound, set 1
+1-inv.mp3     Invalid buzzer sound (if someone buzzes in during pause), set 1     
+1-p1.mp3      Player 1 through 4 unique buzzer sounds (if unique is turned on), set 1
+1-p2.mp3          
+1-p3.mp3
+1-p4.mp3
+1-tu.mp3      Time's up sound played when clock runs out
+2-buzz.mp3    
+2-inv.mp3
+2-p1.mp3
+2-p2.mp3
+2-p3.mp3
+2-p4.mp3
+2-tu.mp3
+```
+
+You can have up to 256 soundsets, just update the #define for MAX_SOUNDSETS. 
