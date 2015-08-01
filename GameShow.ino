@@ -2,11 +2,7 @@
  * John Adams <jna@retina.net> 7/2015
  *
  * TODO's
- *    - serious cleanup of code flow, it's wacky.
- *    - sound support ( need 32 K micro )
  *    - Support remaining options...
- *      - SOUND
- *      - soundsets
  *      - unique sounds
  *      - is time up when all buzzers in? (not worth a config opt.)
  */
