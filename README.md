@@ -55,9 +55,9 @@ On Patch Panel, pins labelled 4 and 8 connect at button push.
 Use internal pullup resistors on arduino instead of soldering resistors.
 Patch panel pins 1+2 go to LEDS in the buzzers
 
-```
 Final Arduino Pinout
---------------------------
+---------------------
+```
 DIGITAL
 
 0 RX        no connect
