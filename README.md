@@ -17,6 +17,7 @@ effects and time the game for you.
 - Use Arrow-Left to exit setup or the current menu option.
 - Use Arrow-Down to start a game.
 - Use Select to pause a running game. Hit Select again to continue.
+- To abort the currently running game, Pause the game, Hit Arrow Right, then Arrow Left (yeah, this sucks, I'll fix it later.)
 
 ## Setup Options
 
