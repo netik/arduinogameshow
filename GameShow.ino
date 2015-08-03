@@ -2,8 +2,6 @@
  * John Adams <jna@retina.net> 7/2015
  *
  * TODO's
- *    - Support remaining options...
- *      - unique sounds
  *      - is time up when all buzzers in? (not worth a config opt.)
  */
 
@@ -787,8 +785,14 @@ void handleBuzzedIn() {
   } else {
     strcpy(playerstr, "                ");
   }
-  time_to_s(time_s, timeleft, " BUZZ");
+
+  if (gconfig.autonext > -1) {
+    time_to_s(time_s, ((advanceat - millis()) / 1000), " AUTO");
+  } else { 
+    time_to_s(time_s, timeleft, " BUZZ");
+  }
   setlcd(playerstr, time_s, 0);
+
 }
 
 /* Player LED functions */
@@ -889,6 +893,7 @@ void loop() {
       if (gconfig.autonext > 0) {
         if (millis() > advanceat) {
           current_state = STATE_RUNNING;
+          set_player_leds(HIGH); // clear LEDs
           Serial.println(F("autonext release "));
         }
       }
