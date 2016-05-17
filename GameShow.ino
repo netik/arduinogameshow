@@ -1,12 +1,15 @@
 /* Arduino Game Show
  * John Adams <jna@retina.net> 7/2015
  *
+ * DO NOT ALLOCATE ANYMORE MEMORY IN THIS CODE.
+ * This code is nearly out of memory with 381 bytes left for local vars
+ * 
  * TODO's
  *      - is time up when all buzzers in? (not worth a config opt.)
  */
 
 // include the library code:                                                                                                        
-#include <avr/pgmspace.h>
+#include <avr/pgmspace.h> 
 #include <Wire.h>
 #include <EEPROM.h>    // to be included only if defined EEPROM_SUPPORT                                                             
 #include <SD.h>
@@ -14,6 +17,8 @@
 
 #include <Adafruit_RGBLCDShield.h>
 #include <Adafruit_VS1053.h>
+
+#undef DEBUG
 
 /* state machine for events */
 #define STATE_NEWGAME 0
@@ -27,15 +32,18 @@
 
 /* winning player blink speed */
 #define DISPLAYBLINK 1500
-#define DEFAULT_MAXTIME 300
+#define DEFAULT_MAXTIME 60
 
-// debounce time in mS                                                                                                              
+// when do we start counting down
+#define COUNTDOWN_TIME 5
+
+// debounce time in mS
 #define DEBOUNCE 10
 
-// delay after switch hit/fake debounce                                                                                             
+// delay after switch hit/fake debounce
 #define F_DEBOUNCE 200
 
-// Audio shield                                                                                                                     
+// Audio shield
 #define ASHIELD_RESET -1
 #define ASHIELD_CS     7
 #define ASHIELD_DCS    6
@@ -45,9 +53,9 @@
 // starting GPIO for player LEDs
 #define GPIO_PLAYER    4 
 
-// These #defines make it easy to set the backlight color if using an RGB display                                                   
+// These #defines make it easy to set the backlight color if using an RGB display
 #define RED 0x1
-#define YELLOW 0x3
+#define YELLOWf 0x3
 #define GREEN 0x2
 #define TEAL 0x6
 #define BLUE 0x4
@@ -65,13 +73,14 @@
 byte player_buttons[] = {2, 5, 8, 9};
 byte pressed[NUMBUTTONS], justpressed[NUMBUTTONS], justreleased[NUMBUTTONS], buzzedin[NUMBUTTONS];
 byte lastplayer = -1;
+byte lastblink = 0;
 
 /* configuration and setup */
 #define MOVECURSOR 1  // constants for indicating whether cursor should be redrawn
 #define MOVELIST 2  // constants for indicating whether cursor should be redrawn
 
 // ID of the settings block
-#define CONFIG_VERSION "gs5"
+#define CONFIG_VERSION "gs1"
 // Tell it where to store your config data in EEPROM
 #define CONFIG_START 32
 
@@ -100,6 +109,7 @@ static unsigned long advanceat;
 
 /* UI */
 Adafruit_RGBLCDShield lcd = Adafruit_RGBLCDShield();
+
 /* Sound */
 Adafruit_VS1053_FilePlayer musicPlayer =
   Adafruit_VS1053_FilePlayer(ASHIELD_RESET, ASHIELD_CS, ASHIELD_DCS, ADREQ, ACARDCS);
@@ -184,7 +194,6 @@ void time_to_s(char *s, int t, char *state) {
 }
 
 void resetConfig() {
-
   // defaults
   strcpy(gconfig.version, CONFIG_VERSION);
   gconfig.maxtime = DEFAULT_MAXTIME;
@@ -196,19 +205,24 @@ void resetConfig() {
   gconfig.roundlockout = 0;
   gconfig.lastten = 0;
 }
+
 /* start of game logic */
 void loadConfig() {
+#ifdef DEBUG
   Serial.println(F("try to load config"));
+#endif
   // To make sure there are settings, and they are YOURS!
   // If nothing is found it will use the default settings.
   if (EEPROM.read(CONFIG_START + 0) == CONFIG_VERSION[0] &&
       EEPROM.read(CONFIG_START + 1) == CONFIG_VERSION[1] &&
       EEPROM.read(CONFIG_START + 2) == CONFIG_VERSION[2]) {
+#ifdef DEBUG
     Serial.println(F("config found (max, autonext, soundset, unique, pauzebuzz, multibuzz, roundlockout, lastten"));
+#endif
 
     for (unsigned int t = 0; t < sizeof(gconfig); t++)
       *((char*)&gconfig + t) = EEPROM.read(CONFIG_START + t);
-
+#ifdef DEBUG
     Serial.println(gconfig.maxtime);
     Serial.println(gconfig.autonext);
     Serial.println(gconfig.soundset);
@@ -217,16 +231,20 @@ void loadConfig() {
     Serial.println(gconfig.multibuzz);
     Serial.println(gconfig.roundlockout);
     Serial.println(gconfig.lastten);
+#endif
 
-  } else {
+  } 
+#ifdef DEBUG
+else {
     Serial.println(F("couldn't load config"));
   }
+#endif
 
 }
 
-
 void setup() {
   byte i;
+  
   resetConfig();
   Serial.begin(9600);
   loadConfig();
@@ -247,10 +265,11 @@ void setup() {
     while (1);
   }
 
-  // optional
-  musicPlayer.sineTest(0x44, 500);    // Make a tone to indicate VS1053 is working
+  advanceat = millis() + 1000;
+
   // Set volume for left, right channels. lower numbers == louder volume!
-  musicPlayer.setVolume(10, 10);
+  musicPlayer.setVolume(1, 1);
+
   lcd.begin(16, 2);
   
   if (! musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT))
@@ -264,17 +283,21 @@ void setup() {
     while (1);  // don't do anything more
   }
 
-  Serial.println("SD OK!");;
+#ifdef DEBUG
   Serial.println(F("VS1053 found"));
+#endif
 
   set_player_leds(LOW);
-    
+  musicPlayer.sineTest(0x44, 500);    // Make a tone to indicate VS1053 is working
+  
   // Print a message to the LCD.
   setlcd(" Game Show v1.0", " jna@retina.net", 1 );
 
   delay(2000);
   show_first_screen();
+#ifdef DEBUG
   Serial.println(F("system up."));
+#endif
 }
 
 void show_first_screen() {
@@ -286,7 +309,7 @@ void show_first_screen() {
 }
 
 void playsound(byte type,byte player) {
-  char filename[30];
+  char filename[15];
 
   filename[0] = (char) gconfig.soundset + 48;
   filename[1] = '-';
@@ -294,7 +317,7 @@ void playsound(byte type,byte player) {
  
   switch (type) {
     case SND_BUZZ:
-      if (gconfig.unique_sounds) { 
+      if (gconfig.unique_sounds) {  
         filename[2] = 'p';
         filename[3] = (char) player + 49;
         filename[4] = '\0';
@@ -311,7 +334,9 @@ void playsound(byte type,byte player) {
       break;
   }
  
+#ifdef DEBUG
   Serial.println(filename);
+#endif
   
   if (musicPlayer.playingMusic) {
     // refuse to play if we are already playing.
@@ -320,6 +345,7 @@ void playsound(byte type,byte player) {
     //   2) person buzzes in at time up (oh well.) 
     return; 
   }
+  delay (200);
   
   if (! musicPlayer.startPlayingFile(filename)) {
     setlcd("File not found", filename, 1);
@@ -407,7 +433,9 @@ void handle_gm_buttons() {
     timeleft = gconfig.maxtime;
     time_to_s(time_s, timeleft, " RUNNING");
     setlcd("Starting Game...", time_s, 1);
+#ifdef DEBUG
     Serial.println(F("Game starting..."));
+#endif
     
     set_player_leds(HIGH);
 
@@ -416,7 +444,6 @@ void handle_gm_buttons() {
     }
     nexttick = millis() + 1000;
   }
-
   
   /* handle RIGHT button */
   if ((buttons & BUTTON_RIGHT) && (current_state == STATE_PAUSED || current_state == STATE_NEWGAME || current_state == STATE_OUTOFTIME)) {
@@ -427,6 +454,11 @@ void handle_gm_buttons() {
     // SELECT to unpause the game  or continue after a buzzer.
     current_state = STATE_RUNNING;
     set_player_leds(HIGH); // clear LEDs
+    time_to_s(time_s, timeleft, " RUNNING");
+    strcpy(status_s, "SEL=Pause   ");
+    buzzedin_s(status_s + 12);
+    setlcd(status_s, time_s, 0);
+
     delay(F_DEBOUNCE);
   } else {
     if (buttons & BUTTON_SELECT && current_state == STATE_RUNNING) {
@@ -533,7 +565,9 @@ void saveConfig() {
   for (unsigned int t = 0; t < sizeof(gconfig); t++)
     EEPROM.write(CONFIG_START + t, *((char*)&gconfig + t));
 
+#ifdef DEBUG
   Serial.println(F("wrote config"));
+#endif
 }
 
 
@@ -614,11 +648,8 @@ void handleSetup() {
         timeoutTime = millis() + menuTimeout; // reset timeout timer
         switch (topItemDisplayed + cursorPosition) // adding these values together = where on menuItems cursor is.
         {
-          // put code to be run when specific item is selected in place of the Serial.print filler.
-          // the Serial.print code can be removed, but DO NOT change the case & break structure.
-          // (Obviously, you should have as many case instances as you do menu items.)
           case 0:  // Max Time
-            inputInt(menuItems[0], &gconfig.maxtime, 0, 3600, 30, 1);
+            inputInt(menuItems[0], &gconfig.maxtime, 0, 3600, 15, 1);
             redraw = MOVELIST;  // redraw entire menu
             buttons = false; // prevent exit.
             break;
@@ -679,7 +710,9 @@ void handleSetup() {
         current_state = STATE_NEWGAME;
         show_first_screen();
 
+#ifdef DEBUG
         Serial.println(F("exit_setup"));
+#endif
         saveConfig();
         return;
       }
@@ -748,7 +781,7 @@ void update_clock()
 
     /* TODO: Handle millis() rollover, or, maybe we don't care because its 50 days in new arduinos */
     nexttick += 1000;  // do it again 1 second later
-    if ((timeleft <= 10) && (gconfig.lastten == 1) && (timeleft != 0) && (current_state == STATE_RUNNING)) { 
+    if ((timeleft <= COUNTDOWN_TIME) && (gconfig.lastten == 1) && (timeleft != 0) && (current_state == STATE_RUNNING)) { 
       set_player_leds(LOW);
       musicPlayer.sineTest(0x44, 250);
       set_player_leds(HIGH);
@@ -756,6 +789,7 @@ void update_clock()
     }
     if ((timeleft <= 0) && (current_state != STATE_OUTOFTIME)) {
       current_state = STATE_OUTOFTIME;
+      set_player_leds(LOW); 
       playsound(SND_TIMEUP,-1); 
       time_to_s(time_s, timeleft, " TIMEUP");
       setlcd("DOWN=Play Again", time_s, 0);
@@ -859,9 +893,16 @@ void loop() {
   /* take care of the players */
   switch (current_state) {
     case STATE_NEWGAME:
-      // das blinkenlights if we are inbetween rounds!
-      solo_player_led((millis()/100) % 4);
-      delay(150);
+      // cycle through the LEDs inbetween rounds.     
+      solo_player_led(lastblink);
+  
+      // overload advance at so that we have faster user response.
+      // delays are bad, they take control away from the user. 
+      if (millis() > advanceat) { 
+        lastblink++;
+        advanceat = millis() + 1000; 
+        if (lastblink > 3) { lastblink = 0; } 
+      }
       break; 
     case STATE_SETUP:
     case STATE_INSETUP:
@@ -894,7 +935,9 @@ void loop() {
         if (millis() > advanceat) {
           current_state = STATE_RUNNING;
           set_player_leds(HIGH); // clear LEDs
+#ifdef DEBUG
           Serial.println(F("autonext release "));
+#endif
         }
       }
       break;
