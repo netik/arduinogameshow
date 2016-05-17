@@ -58,7 +58,7 @@ If you'd like to change the defaults, edit the `resetConfig()` function.
 
 ## Sofware
 
-This software uses the VS1053 libraries and RGBLCDSHield libraries from Adafruit. It's also quite large. You will absolutely need a ATMEGA32 to run it.
+This software uses the VS1053 libraries and RGBLCDShield libraries from Adafruit. It's also quite large. You will absolutely need a ATMEGA32 to run it.
 
 At last compile we were very close to the edge of what the board could do, at around 80% usage. Don't panic about the "low memory messages" out of the compiler. We never use more than a hundred bytes or so for local variables and are careful to not allocate memory we don't have. No crashes yet!
 
@@ -97,6 +97,10 @@ Patch Shield
 VS1053 Shield
 Arduino (bottom)
 ```
+
+The gigantic stack of arduino stuff isn't extremely stable and really demands a case. Heavy button pushing can torque the entire display. Busing out the buttons to bigger buttons (instead of the display backpack's tiny microswitches) would be best. 
+
+I recommend you mount the display to a case and run wires between the display backpack and the rest of the hardware, securly mounting the arduino and it's friends to the bottom of said case. 
 
 ## Audio connections
 
